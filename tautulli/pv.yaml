@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    app: tatulli
+  name: tatulli-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 1Gi
+  mountOptions:
+  - hard
+  - nfsvers=4.1
+  nfs:
+    path: /volume1/Media/containerdata/tatulli
+    server: 10.0.0.20
+  persistentVolumeReclaimPolicy: Recycle
+  volumeMode: Filesystem

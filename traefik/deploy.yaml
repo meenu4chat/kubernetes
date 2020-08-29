@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 1
+  labels:
+    app: traefik
+  name: traefik
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: traefik
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      containers:
+      - args:
+        - --api.insecure
+        - --accesslog
+        - --providers.kubernetesingress=true
+        - --experimental.pilot.token=2da7e0bb-3f22-471a-a2c0-22e9d2867050
+        - --global.checknewversion=true
+        - --serverstransport.insecureskipverify=true
+        - --entrypoints.web.Address=:80
+        - --entrypoints.websecure.Address=:443
+        - --providers.kubernetescrd
+        - --certificatesresolvers.default.acme.tlschallenge
+        - --certificatesresolvers.default.acme.email=martino@martinojones.com
+        - --certificatesresolvers.default.acme.storage=/config/acme.json
+        - --certificatesResolvers.le.acme.httpChallenge.entryPoint=web
+        - --log.filePath=/config/log/traefik.log
+        - --log.level=DEBUG
+        - --providers.file.filename=/config/rules.toml
+        - --accesslog=true
+        - --accesslog.filepath=/config/log/access.log
+        image: traefik:v2.3
+        imagePullPolicy: IfNotPresent
+        name: traefik
+        ports:
+        - containerPort: 80
+          hostPort: 80
+          name: web
+          protocol: TCP
+        - containerPort: 80
+          hostPort: 81
+          name: webintern
+          protocol: TCP
+        - containerPort: 443
+          hostPort: 443
+          name: websecure
+          protocol: TCP
+        - containerPort: 443
+          hostPort: 444
+          name: secureintern
+          protocol: TCP
+        - containerPort: 8080
+          hostPort: 8080
+          name: admin
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /config
+          name: data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: traefik-ingress-controller
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: traefik-data

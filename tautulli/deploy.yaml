@@ -2,14 +2,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   generation: 1
-  name: searx
+  managedFields:
+  name: tautulli
+  namespace: default
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: searx
+      app: tautulli
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -17,9 +19,8 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        app: searx
+        app: tautulli
     spec:
       containers:
       - env:
@@ -28,20 +29,27 @@ spec:
         - name: PGID
           value: "1000"
         - name: TZ
-          value: America/Chicago
-        - name: IMAGE_PROXY
-          value: "True"
-        - name: BASE_URL
-          value: https://search.cloud.martinojones.com
-        image: wonderfall/searx
+          value: America/Detroit
+        image: linuxserver/tautulli
         imagePullPolicy: Always
-        name: searx
+        name: tautulli
         ports:
-        - containerPort: 8888
-          name: searx
+        - containerPort: 8181
+          name: web
           protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /config
+          name: data
+      dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-status: {}
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: tatulli-data
