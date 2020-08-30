@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    app: grocy
+  name: grocy-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 5Gi
+  mountOptions:
+  - hard
+  - nfsvers=4.1
+  nfs:
+    path: /volume1/Media/containerdata/grocy
+    server: 10.0.0.20
+  persistentVolumeReclaimPolicy: Recycle
+  volumeMode: Filesystem

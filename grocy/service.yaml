@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: grocy
+    kubernetes.io/name: grocy
+  name: grocy
+  namespace: default
+spec:
+  ports:
+  - name: grocy
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: grocy
+  type: ClusterIP

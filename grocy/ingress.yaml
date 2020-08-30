@@ -1,0 +1,35 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grocy
+  namespace: default
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`grocery.cloud.martinojones.com`)
+    middlewares:
+    - name: redirecthttps
+    services:
+    - name: grocy
+      port: 80
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  generation: 1
+  name: grocysecure
+  namespace: default
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`grocery.cloud.martinojones.com`)
+    services:
+    - name: grocy
+      port: 80
+  tls:
+    certResolver: default
