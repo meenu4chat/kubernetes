@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wireguard
+    kubernetes.io/name: wireguard
+  name: wireguard
+  namespace: default
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: wireguard
+    nodePort: 31820
+    port: 51820
+    protocol: UDP
+    targetPort: 51820
+  selector:
+    app: wireguard
+  sessionAffinity: None
+  type: NodePort

@@ -1,0 +1,35 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: chatdev
+  namespace: default
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`chatdev.reallingua.com`)
+    middlewares:
+    - name: redirecthttps
+    services:
+    - name: chatdev
+      port: 3000
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  generation: 1
+  name: chatdevsecure
+  namespace: default
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`chatdev.reallingua.com`)
+    services:
+    - name: chatdev
+      port: 3000
+  tls:
+    certResolver: default

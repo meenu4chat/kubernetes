@@ -67,9 +67,6 @@ spec:
           hostPort: 8080
           name: admin
           protocol: TCP
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /config
           name: data

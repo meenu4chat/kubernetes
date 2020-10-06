@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: searx
+    kubernetes.io/name: searx
+  name: searx
+  namespace: default
+  resourceVersion: "1117"
+  selfLink: /api/v1/namespaces/default/services/searx
+  uid: 3031c230-dfd6-49fb-9c14-4f138ffd1079
+spec:
+  clusterIP: 10.98.31.153
+  ports:
+  - name: searx
+    port: 8888
+    protocol: TCP
+    targetPort: 8888
+  selector:
+    app: searx
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

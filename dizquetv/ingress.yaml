@@ -1,0 +1,38 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dizquetv
+  namespace: default
+spec:
+  entryPoints:
+  - web
+  redirectScheme:
+    permanent: true
+    scheme: https
+  routes:
+  - kind: Rule
+    match: Host(`tv.cloud.martinojones.com`)
+    middlewares:
+    - name: redirecthttps
+    services:
+    - name: dizquetv
+      port: 8000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dizquetvsecure
+  namespace: default
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`tv.cloud.martinojones.com`)
+    middlewares:
+    - name: redirecthttps
+    services:
+    - name: dizquetv
+      port: 8000
+  tls:
+    certResolver: default

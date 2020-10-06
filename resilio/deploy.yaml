@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 1
+  managedFields:
+  name: resilio
+  namespace: resilio
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: resilio
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: resilio
+    spec:
+      containers:
+      - env:
+        - name: TZ
+          value: America/Detroit
+        image: resilio/sync
+        imagePullPolicy: Always
+        name: resilio
+        ports:
+        - containerPort: 8888
+          name: web
+          protocol: TCP
+        - containerPort: 55555
+          name: syncdata
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /mnt/sync
+          name: data
+        - mountPath: /mnt/sync/folders/media
+          name: media
+        - mountPath: /mnt/sync/folders/sync
+          name: sync
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: resilio-data
+      - name: media
+        persistentVolumeClaim:
+          claimName: resilio-media
+      - name: sync
+        persistentVolumeClaim:
+          claimName: resilio-sync

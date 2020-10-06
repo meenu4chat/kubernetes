@@ -1,0 +1,35 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: resilio
+  namespace: resilio
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`sync.cloud.martinojones.com`)
+    middlewares:
+    - name: redirecthttps
+    services:
+    - name: resilio
+      port: 8888
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  generation: 1
+  name: resiliosecure
+  namespace: resilio
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`sync.cloud.martinojones.com`)
+    services:
+    - name: resilio
+      port: 8888
+  tls:
+    certResolver: default
