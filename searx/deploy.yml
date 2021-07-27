@@ -3,21 +3,14 @@ kind: Deployment
 metadata:
   generation: 1
   name: searx
+  namespace: default
 spec:
-  progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: searx
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: searx
     spec:
@@ -40,8 +33,3 @@ spec:
         - containerPort: 8888
           name: searx
           protocol: TCP
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
-status: {}
