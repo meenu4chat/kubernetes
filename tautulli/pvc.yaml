@@ -4,13 +4,8 @@ metadata:
   name: tatulli-data
 spec:
   accessModes:
-  - ReadWriteMany
+    - ReadWriteOnce
+  storageClassName: longhorn
   resources:
     requests:
-      storage: 1Gi
-  selector:
-    matchLabels:
-      app: tatulli
-  storageClassName: ""
-  volumeMode: Filesystem
-  volumeName: tatulli-pv
+      storage: 9Gi

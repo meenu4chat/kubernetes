@@ -1,3 +1,0 @@
-persistence.enabled: true
-persistence.existingClaim: nextcloud-pvc
-service.type: LoadBalancer
