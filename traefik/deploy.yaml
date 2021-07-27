@@ -1,23 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  generation: 1
   labels:
     app: traefik
   name: traefik
   namespace: default
 spec:
-  progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: traefik
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -39,9 +31,8 @@ spec:
         - --certificatesresolvers.default.acme.storage=/config/acme.json
         - --certificatesResolvers.le.acme.httpChallenge.entryPoint=web
         - --log.filePath=/config/log/traefik.log
-        - --log.level=DEBUG
         - --providers.file.filename=/config/rules.toml
-        - --accesslog=true
+        - --accesslog=false
         - --accesslog.filepath=/config/log/access.log
         image: traefik:v2.3
         imagePullPolicy: IfNotPresent
@@ -70,13 +61,8 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: data
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
       serviceAccount: traefik-ingress-controller
       serviceAccountName: traefik-ingress-controller
-      terminationGracePeriodSeconds: 30
       volumes:
       - name: data
         persistentVolumeClaim:

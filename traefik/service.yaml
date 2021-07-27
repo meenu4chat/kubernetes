@@ -2,25 +2,25 @@ apiVersion: v1
 kind: Service
 metadata:
   name: traefik
-  namespace: default
+  namespace: kube-system
 spec:
-  externalTrafficPolicy: Cluster
   ports:
   - name: web
-    nodePort: 80
+    nodePort: 30403
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: web
   - name: admin
-    nodePort: 30008
+    nodePort: 30404
     port: 8080
     protocol: TCP
-    targetPort: 8080
+    targetPort: traefik
   - name: websecure
-    nodePort: 443
+    nodePort: 30955
     port: 443
     protocol: TCP
-    targetPort: 443
+    targetPort: websecure
   selector:
-    app: traefik
-  type: NodePort
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+  type: LoadBalancer
