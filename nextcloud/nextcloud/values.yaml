@@ -189,7 +189,7 @@ nginx:
   resources: {}
 
 internalDatabase:
-  enabled: true
+  enabled: false
   name: nextcloud
 
 ##
@@ -230,7 +230,7 @@ mariadb:
   db:
     name: nextcloud
     user: nextcloud
-    password: changeme
+    password: hg*&^jd0u103
 
   replication:
     enabled: false
@@ -259,15 +259,15 @@ postgresql:
     # storageClass: ""
 
 redis:
-  enabled: false
+  enabled: true
   usePassword: true
-  password: 'changeme'
+  password: 'fjf98*&*(jdi3'
 
 ## Cronjob to execute Nextcloud background tasks
 ## ref: https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/background_jobs_configuration.html#webcron
 ##
 cronjob:
-  enabled: false
+  enabled: true
   # Nexcloud image is used as default but only curl is needed
   image: {}
     # repository: nextcloud
@@ -309,7 +309,7 @@ cronjob:
 service:
   type: LoadBalancer
   port: 8080
-  loadBalancerIP: 10.0.202.20
+  loadBalancerIP: nil
   nodePort: nil
 
 ## Enable persistence using Persistent Volume Claims
@@ -326,7 +326,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "longhorn"
+  storageClass: "longhorn-noreplica"
 
   ## A manually managed Persistent Volume and Claim
   ## Requires persistence.enabled: true
