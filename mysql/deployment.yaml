@@ -20,7 +20,7 @@ spec:
             secretKeyRef:
               name: mysql-pass
               key: password
-        image: mariadb:latest
+        image: mariadb:10.4
         name: mariadb
         ports:
         - containerPort: 3306
