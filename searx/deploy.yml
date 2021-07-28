@@ -26,7 +26,7 @@ spec:
           value: "True"
         - name: BASE_URL
           value: https://search.cloud.martinojones.com
-        image: wonderfall/searx
+        image: searx/searx
         imagePullPolicy: Always
         name: searx
         ports:

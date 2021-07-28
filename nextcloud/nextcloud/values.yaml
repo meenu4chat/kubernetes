@@ -1,10 +1,10 @@
 ## Official nextcloud image version
 ## ref: https://hub.docker.com/r/library/nextcloud/tags/
 ##
-image:
-  repository: nextcloud
-  tag: 19.0.3-apache
-  pullPolicy: IfNotPresent
+#image:
+  #repository: nextcloud
+  #tag: 19.0.3-apache
+  #pullPolicy: IfNotPresent
   # pullSecrets:
   #   - myRegistrKeySecretName
 
@@ -61,7 +61,7 @@ lifecycle: {}
   # preStopCommand: []
 
 nextcloud:
-  host: drive.local
+  host: ""
   #username: admin
   #password: changeme
   ## Use an existing secret
@@ -225,12 +225,12 @@ externalDatabase:
 ##
 mariadb:
   ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
-  enabled: true
+  enabled: false
 
   db:
     name: nextcloud
     user: nextcloud
-    password: hg*&^jd0u103
+    password: hg99fd8jd0u103
 
   replication:
     enabled: false
@@ -241,7 +241,7 @@ mariadb:
   master:
     persistence:
       enabled: true
-      storageClass: "longhorn"
+      storageClass: "longhorn-noreplica"
       accessMode: ReadWriteOnce
       size: 50Gi
 
@@ -250,13 +250,13 @@ mariadb:
 ## for more options see https://github.com/bitnami/charts/tree/master/bitnami/postgresql
 ##
 postgresql:
-  enabled: false
+  enabled: true
   postgresqlUsername: nextcloud
-  postgresqlPassword: changeme
+  postgresqlPassword: jdjJGS88&*()
   postgresqlDatabase: nextcloud
   persistence:
-    enabled: false
-    # storageClass: ""
+    enabled: true
+    storageClass: "longhorn-noreplica"
 
 redis:
   enabled: true
@@ -309,7 +309,7 @@ cronjob:
 service:
   type: LoadBalancer
   port: 8080
-  loadBalancerIP: nil
+  loadBalancerIP: 10.0.202.20
   nodePort: nil
 
 ## Enable persistence using Persistent Volume Claims
