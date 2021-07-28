@@ -53,13 +53,6 @@ ingress:
   #       - nextcloud.kube.home
   labels: {}
 
-
-# Allow configuration of lifecycle hooks
-# ref: https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/
-lifecycle: {}
-  # postStartCommand: []
-  # preStopCommand: []
-
 nextcloud:
   host: ""
   #username: admin
@@ -172,78 +165,6 @@ nextcloud:
   #   runAsNonRoot: true
   #   readOnlyRootFilesystem: true
 
-nginx:
-  ## You need to set an fpm version of the image for nextcloud if you want to use nginx!
-  enabled: false
-  image:
-    repository: nginx
-    tag: alpine
-    pullPolicy: IfNotPresent
-
-  config:
-    # This generates the default nginx config as per the nextcloud documentation
-    default: true
-    # custom: |-
-    #     worker_processes  1;..
-
-  resources: {}
-
-internalDatabase:
-  enabled: false
-  name: nextcloud
-
-##
-## External database configuration
-##
-externalDatabase:
-  enabled: false
-
-  ## Supported database engines: mysql or postgresql
-  type: mysql
-
-  ## Database host
-  host:
-
-  ## Database user
-  user: nextcloud
-
-  ## Database password
-  password:
-
-  ## Database name
-  database: nextcloud
-
-  ## Use a existing secret
-  existingSecret:
-    enabled: false
-    # secretName: nameofsecret
-    # usernameKey: username
-    # passwordKey: password
-
-##
-## MariaDB chart configuration
-##
-mariadb:
-  ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
-  enabled: false
-
-  db:
-    name: nextcloud
-    user: nextcloud
-    password: hg99fd8jd0u103
-
-  replication:
-    enabled: false
-
-  ## Enable persistence using Persistent Volume Claims
-  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-  ##
-  master:
-    persistence:
-      enabled: true
-      storageClass: "longhorn-noreplica"
-      accessMode: ReadWriteOnce
-      size: 50Gi
 
 ##
 ## PostgreSQL chart configuration
@@ -263,48 +184,6 @@ redis:
   usePassword: true
   password: 'fjf98*&*(jdi3'
 
-## Cronjob to execute Nextcloud background tasks
-## ref: https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/background_jobs_configuration.html#webcron
-##
-cronjob:
-  enabled: true
-  # Nexcloud image is used as default but only curl is needed
-  image: {}
-    # repository: nextcloud
-    # tag: 16.0.3-apache
-    # pullPolicy: IfNotPresent
-    # pullSecrets:
-    #   - myRegistrKeySecretName
-  # Every 5 minutes
-  # Note: Setting this to any any other value than 5 minutes might
-  #  cause issues with how nextcloud background jobs are executed
-  schedule: "*/5 * * * *"
-  annotations: {}
-  # Set curl's insecure option if you use e.g. self-signed certificates
-  curlInsecure: false
-  failedJobsHistoryLimit: 5
-  successfulJobsHistoryLimit: 2
-  # If not set, nextcloud deployment one will be set
-  # resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
-
-  # If not set, nextcloud deployment one will be set
-  # nodeSelector: {}
-
-  # If not set, nextcloud deployment one will be set
-  # tolerations: []
-
-  # If not set, nextcloud deployment one will be set
-  # affinity: {}
 
 service:
   type: LoadBalancer
@@ -347,86 +226,3 @@ resources: {}
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
-
-## Liveness and readiness probe values
-## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-##
-livenessProbe:
-  enabled: true
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-  successThreshold: 1
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-  successThreshold: 1
-startupProbe:
-  enabled: false
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 30
-  successThreshold: 1
-
-
-## Enable pod autoscaling using HorizontalPodAutoscaler
-## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
-##
-hpa:
-  enabled: false
-  cputhreshold: 60
-  minPods: 1
-  maxPods: 10
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
-
-## Prometheus Exporter / Metrics
-##
-metrics:
-  enabled: false
-
-  replicaCount: 1
-  # The metrics exporter needs to know how you serve Nextcloud either http or https
-  https: false
-  timeout: 5s
-
-  image:
-    repository: xperimental/nextcloud-exporter
-    tag: v0.3.0
-    pullPolicy: IfNotPresent
-
-  ## Metrics exporter resource requests and limits
-  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  # resources: {}
-
-  ## Metrics exporter pod Annotation and Labels
-  # podAnnotations: {}
-
-  # podLabels: {}
-
-  service:
-    type: ClusterIP
-    ## Use serviceLoadBalancerIP to request a specific static IP,
-    ## otherwise leave blank
-    # loadBalancerIP:
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "9205"
-    labels: {}
-
-rbac:
-  enabled: false
-  serviceaccount:
-    create: true
-    name: nextcloud-serviceaccount
