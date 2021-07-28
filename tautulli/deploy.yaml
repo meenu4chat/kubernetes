@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  generation: 1
-  managedFields:
   name: tautulli
   namespace: default
 spec:
@@ -24,7 +22,6 @@ spec:
         - name: TZ
           value: America/Detroit
         image: linuxserver/tautulli
-        imagePullPolicy: Always
         name: tautulli
         ports:
         - containerPort: 8181
