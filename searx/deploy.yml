@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  generation: 1
   name: searx
   namespace: default
 spec:
@@ -27,7 +26,6 @@ spec:
         - name: BASE_URL
           value: https://search.cloud.martinojones.com
         image: searx/searx
-        imagePullPolicy: Always
         name: searx
         ports:
         - containerPort: 8888
