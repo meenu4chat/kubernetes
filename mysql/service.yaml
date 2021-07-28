@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wordpress-mysql
+  name: mysql-mysql
   namespace: default
   labels:
-    app: wordpress
+    app: mysql
 spec:
   ports:
     - port: 3306
