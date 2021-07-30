@@ -45,4 +45,4 @@ spec:
       - name: movies
         nfs: 
           server: 10.0.0.102
-          path: /mnt/gernalshare
+          path: /mnt/generalshare
