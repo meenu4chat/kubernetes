@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: lidarr
+  name: lidarr
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lidarr
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: lidarr
+    spec:
+      containers:
+      - env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/Detroit
+        image: ghcr.io/linuxserver/lidarr
+        name: lidarr
+        ports:
+        - containerPort: 8686
+          name: web
+          protocol: TCP
+        resources:
+          limits:
+              cpu: 100m
+              memory: 700Mi
+        volumeMounts:
+        - mountPath: /config
+          name: data
+        - mountPath: /music
+          name: music
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: lidarr-data
+      - name: music
+        nfs: 
+          server: 10.0.0.101
+          path: /music

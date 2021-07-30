@@ -199,44 +199,6 @@ externalDatabase:
     usernameKey: username
     passwordKey: password
 
-##
-## MariaDB chart configuration
-##
-mariadb:
-  ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
-  enabled: true
-
-  db:
-    name: nextcloud
-    user: nextcloud
-    password: changeme
-
-  replication:
-    enabled: false
-
-  ## Enable persistence using Persistent Volume Claims
-  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-  ##
-  master:
-    persistence:
-      enabled: true
-      storageClass: "longhorn"
-      accessMode: ReadWriteOnce
-      size: 50Gi
-
-##
-## PostgreSQL chart configuration
-## for more options see https://github.com/bitnami/charts/tree/master/bitnami/postgresql
-##
-postgresql:
-  enabled: false
-  postgresqlUsername: nextcloud
-  postgresqlPassword: changeme
-  postgresqlDatabase: nextcloud
-  persistence:
-    enabled: false
-    # storageClass: ""
-
 redis:
   enabled: true
   usePassword: true
@@ -305,7 +267,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "longhorn"
+  storageClass: "longhorn-noreplica"
 
   ## A manually managed Persistent Volume and Claim
   ## Requires persistence.enabled: true
@@ -326,47 +288,6 @@ resources: {}
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
-
-## Liveness and readiness probe values
-## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-##
-livenessProbe:
-  enabled: true
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-  successThreshold: 1
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-  successThreshold: 1
-startupProbe:
-  enabled: false
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 30
-  successThreshold: 1
-
-
-## Enable pod autoscaling using HorizontalPodAutoscaler
-## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
-##
-hpa:
-  enabled: false
-  cputhreshold: 60
-  minPods: 1
-  maxPods: 10
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
 
 
 ## Prometheus Exporter / Metrics
