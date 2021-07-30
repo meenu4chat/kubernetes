@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jellyfin
+  name: jellyfin
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+      - env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/Detroit
+        image: linuxserver/jellyfin
+        name: jellyfin
+        ports:
+        - containerPort: 8096
+          name: web
+          protocol: TCP
+        resources:
+          limits:
+              cpu: 100m
+              memory: 700Mi
+        volumeMounts:
+        - mountPath: /config
+          name: data
+        - mountPath: /movies
+          name: movies
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: jellyfin-data
+      - name: music
+        nfs: 
+          server: 10.0.0.102
+          path: /mnt/gernalshare
