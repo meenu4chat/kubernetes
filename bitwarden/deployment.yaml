@@ -26,5 +26,5 @@ spec:
           name: web
       volumes:
       - name: data
-        persistantVolumeClaim:
+        persistentVolumeClaim:
           claimName: bitwarden-data
